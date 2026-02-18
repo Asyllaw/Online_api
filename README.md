@@ -18,6 +18,6 @@ samples, guidance on mobile development, and a full API reference.
 ## App Preview
 
 <p align="center">
-  <img src="screenshots/post_api.png" width="350" title="Post List">
-  <img src="screenshots/post_succesS.png" width="350" title="Add Post">
+  <img src="screenshot/post_api.png" width="350" title="Post List">
+  <img src="screenshot/post_succesS.png" width="350" title="Add Post">
 </p>
