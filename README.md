@@ -19,5 +19,5 @@ samples, guidance on mobile development, and a full API reference.
 
 <p align="center">
   <img src="screenshots/post_api.png" width="350" title="Post List">
-  <img src="screenshots/post_success.png" width="350" title="Add Post">
+  <img src="screenshots/post_succesS.png" width="350" title="Add Post">
 </p>
