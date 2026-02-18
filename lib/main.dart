@@ -16,7 +16,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrangeAccent),
+          scaffoldBackgroundColor: Colors.white70,
       ),
       home: const PostScreen(),
     );
@@ -40,45 +41,65 @@ class PostScreenState extends State<PostScreen> {
     _posts = _repository.fetchPosts();
   }
 
+  // 1. Add a variable to hold your actual list of posts
+  List<Post>? _cachedPosts;
+
   void _sendPost() async {
-    Post newPost = Post(title: "Hello Flutter",
-        body: "This is a test post",
-        userId: 1);
+    Post newPost = Post(
+      title: "Hello there",
+      body: "This is a flutter post Example",
+      userId: 1,
+    );
+
     try {
       Post createdPost = await _repository.createPost(newPost);
+
+      // 2. Manually insert the new post at the top of your list
+      setState(() {
+        _cachedPosts?.insert(0, createdPost);
+      });
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Success! Created Post ID: ${createdPost.id}")),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Error creating post")),
+        const SnackBar(content: Text("Post creation failed!!!")),
       );
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Demo API")),
+      appBar: AppBar(title: const Text("API Post Demo")),
       body: FutureBuilder<List<Post>>(
         future: _posts,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text("Error: ${snapshot.error}"));
-          } else {
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting && _cachedPosts == null) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text("Error: ${snapshot.error}"));
+            }
+
+            // Save the initial fetch to our cache if it's empty
+            _cachedPosts ??= snapshot.data;
+
             return ListView.builder(
-              itemCount: snapshot.data!.length,
+              itemCount: _cachedPosts!.length,
               itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(snapshot.data![index].title, style: const TextStyle(fontWeight: FontWeight.bold)),
-                  subtitle: Text(snapshot.data![index].body),
+                final item = _cachedPosts![index];
+                return Card(
+                  child: ListTile(
+                    title: Text(item.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                    subtitle: Text(item.body),
+                  ),
                 );
               },
             );
           }
-        },
+
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _sendPost,

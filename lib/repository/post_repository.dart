@@ -16,7 +16,7 @@ class PostRepository {
       final response = await http.get(
         Uri.parse('$baseUrl/posts'),
       ).timeout(
-        const Duration(seconds: 10),
+        const Duration(seconds: 20),
         onTimeout: () {
           throw Exception('Connection timeout - please check your internet connection');
         },
@@ -70,7 +70,7 @@ class PostRepository {
           'userId': post.userId,
         }),
       ).timeout(
-        const Duration(seconds: 10),
+        const Duration(seconds: 20),
         onTimeout: () {
           throw Exception('Connection timeout - please check your internet connection');
         },
